@@ -26,7 +26,7 @@ class BucketSize:
         client = BucketSize.get_cloudwatch_client()
         # when client cannot establish connection to cloudwatch due to no AWS
         # credentials, return
-        if not client:
+        if client is None:
             return None
         result = client.get_metric_statistics(
             Namespace="AWS/S3",
@@ -56,7 +56,7 @@ class BucketSize:
         """
         access_key, secret_access_key = BucketSize.get_credentials()
 
-        if access_key == '' or secret_access_key == '':
+        if access_key is None or secret_access_key is None:
             print("No AWS credentials provided, Can't connect to cloudwatch")
             return None
         return boto3.client(
@@ -75,4 +75,4 @@ class BucketSize:
         load_dotenv()
         access_key = os.getenv("AWS_ACCESS_KEY")
         secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-        return [access_key, secret_access_key]
+        return access_key, secret_access_key
